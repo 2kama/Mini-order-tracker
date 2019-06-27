@@ -6,10 +6,11 @@ import { bindActionCreators } from 'redux'
 import { addProducts } from './../../actions/'
 import firebase from './../../Firebase'
 
+import ViewProduct from './ViewProduct'
+import Header from './../Header'
+
 
 const db = firebase.firestore()
-
-
 const firebaseAuth = firebase.auth()
 
 class addProduct extends Component {
@@ -100,6 +101,7 @@ class addProduct extends Component {
 
         return(
             <Fragment>
+                <Header />
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 offset-md-3 col-sm-8 offset-sm-2">
@@ -138,7 +140,9 @@ class addProduct extends Component {
                         </div>
                     </div>
                 </div>
-                
+
+
+                <ViewProduct />
 
 
 

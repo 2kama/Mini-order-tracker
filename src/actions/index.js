@@ -1,5 +1,5 @@
 import firebase from './../Firebase'
-import { USER_LOGIN, USER_REGISTER, USER_DATA, CLEAR_USER_DATA, ADD_PRODUCTS } from './types'
+import { USER_LOGIN, USER_REGISTER, USER_DATA, CLEAR_USER_DATA, ADD_PRODUCTS, ADD_TO_CART } from './types'
 
 
 const db = firebase.firestore()
@@ -14,45 +14,40 @@ export const registerUser = (username, address, phone, email, password) => {
         auth.createUserWithEmailAndPassword(email, password)
         .then(createdUser => {
 
-            createdUser.user.updateProfile({
-                displayName : username
-            }).then(() => {
 
                 let orderID = `order_${Math.random().toString(36).substr(2, 12)}`
 
-                db.collection("users").doc(createdUser.uid).set({
+                db.collection("packages").doc(orderID).set({
+                    amt : 0,
+                    sent : false,
+                    paid : false,
+                    comfirmed : false,
+                    processed : false,
+                    ontheWay : false,
+                    delivered: false,
+                    user : createdUser.user.uid
+                 })
+
+                db.collection("users").doc(createdUser.user.uid).set({
                     username,
                     usertype : "customer",
                     email,
                     address,
                     phone,
                     orderID,
-                    uid : createdUser.uid,
+                    uid : createdUser.user.uid,
                     userCreated : new Date().getTime()
                 }).then(() => {
 
-                    db.collection("packages").doc(orderID).set({
-                        amt : 0,
-                        sent : false,
-                        paid : false,
-                        comfirmed : false,
-                        processed : false,
-                        ontheWay : false,
-                        delivered: false,
-                        user : createdUser.uid
-                     }).then(() => {
-
                         dispatch({
                             type: USER_REGISTER,
-                            payload : createdUser
+                            payload : createdUser.user
                         })
 
-                     })
                 })
 
                 
 
-            })
              
             
         }).catch(err => {
@@ -133,30 +128,47 @@ export const addProducts = (name, desc, price) => {
     }
 }
 
-// export const addChannel = (channelName, channelDetails, user) => {
-//     return dispatch => {
-//         let channelID = `channel_${Math.random().toString(36).substr(2, 12)}_${Math.random().toString(36).substr(2, 12)}`
-//         db.collection("channel").doc(channelID).set({
-//             channelID : channelID,
-//             channelName : channelName,
-//             channelDetails : channelDetails,
-//             createdBy : user,
-//             createdOn : new Date().getTime(),
-//             show : true
-//         }).then(() => {
-//             dispatch({
-//                 type: ADD_CHANNEL,
-//                 payload : {
-//                     message : 'Success'
-//                 }
-//             })
-//         }).catch(err => {
-//             dispatch({
-//                 type: ADD_CHANNEL,
-//                 payload : err
-//             })
-//         })
-//     }
-// }
+
+export const addingCart = (productID, orderID) => {
+    return dispatch => {
+
+        db.collection("orders").where("productID", "==", productID).where("orderID", "==", orderID).get().then(find => {
+
+            if(find.size === 0) {
+
+                let orderItem = `orderItem_${Math.random().toString(36).substr(2,12)}`
+
+                db.collection("orders").doc(orderItem).set({
+                    productID,
+                    orderID,
+                    quantity : 1
+                }).then(() => {
+                    dispatch({
+                        type: ADD_TO_CART,
+                        payload : {
+                            message : "Success"
+                        }
+                    })
+                })
+
+            }else {
+                dispatch({
+                    type: ADD_TO_CART,
+                    payload : {
+                        message : "Success"
+                    }
+                })
+            }
+
+        }).catch(err => {
+            dispatch({
+                type: ADD_TO_CART,
+                payload : err
+            })
+        })
+
+        
+    }
+}
 
 

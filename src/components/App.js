@@ -8,6 +8,7 @@ import AdminHome from './Admin/'
 import Redirect from './Redirect'
 
 import AddProduct from './AddProducts/AddProduct'
+import Market from './Market/'
 
 
 const App = () => {
@@ -16,7 +17,8 @@ const App = () => {
             <BrowserRouter>
                 <div>
                     <Switch>
-                        <Route exact path="/login" component={Login} />
+                        <Route exact path="/" component={Market} />
+                        <Route path="/login" component={Login} />
                         <Route path="/register" component={Register} />
                         <Route path="/adminHome" component={AdminHome} />
                         <Route path="/redirect" component={Redirect} />

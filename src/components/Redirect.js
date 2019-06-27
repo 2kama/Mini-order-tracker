@@ -14,7 +14,8 @@ class Redirect extends Component {
     componentDidMount() {
         firebaseAuth.onAuthStateChanged(user => {
             if (user) {
-                
+
+                //firebaseAuth.signOut()
                 db.collection("users").doc(user.uid).get().then((doc) => {
                     if(doc.data().usertype === "admin") {
                         window.location.href = '/adminHome'
