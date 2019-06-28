@@ -70,6 +70,7 @@ class Market extends Component {
 
 
     addToCart = productID => {
+        this.setState({error:false})
         this.props.addingCart(productID, this.state.orderID)
     }
 

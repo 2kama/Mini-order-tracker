@@ -1,5 +1,5 @@
 import firebase from './../Firebase'
-import { USER_LOGIN, USER_REGISTER, USER_DATA, CLEAR_USER_DATA, ADD_PRODUCTS, ADD_TO_CART } from './types'
+import { USER_LOGIN, USER_REGISTER, USER_DATA, CLEAR_USER_DATA, ADD_PRODUCTS, ADD_TO_CART, SEND_ORDER } from './types'
 
 
 const db = firebase.firestore()
@@ -25,7 +25,8 @@ export const registerUser = (username, address, phone, email, password) => {
                     processed : false,
                     ontheWay : false,
                     delivered: false,
-                    user : createdUser.user.uid
+                    user : createdUser.user.uid,
+                    orderID
                  })
 
                 db.collection("users").doc(createdUser.user.uid).set({
@@ -141,7 +142,8 @@ export const addingCart = (productID, orderID) => {
                 db.collection("orders").doc(orderItem).set({
                     productID,
                     orderID,
-                    quantity : 1
+                    quantity : 1,
+                    orderItem
                 }).then(() => {
                     dispatch({
                         type: ADD_TO_CART,
@@ -171,4 +173,50 @@ export const addingCart = (productID, orderID) => {
     }
 }
 
+
+export const sendOrder = (userID, orderID, amount) => {
+
+    return dispatch => {
+
+        let newOrderID = `order_${Math.random().toString(36).substr(2, 12)}`
+
+        db.collection("packages").doc(orderID).update({
+            amt : amount,
+            sent : true,
+            paid : true,
+            sentOrder : new Date().getTime(),
+            due : new Date().getTime() + 10800000,
+            code : Math.floor(Math.random() * (9999 - 1000 + 1) ) + 1000,
+        })
+
+        db.collection("packages").doc(newOrderID).set({
+            amt : 0,
+            sent: false,
+            paid : false,
+            user : userID,
+            comfirmed : false,
+            delivered : false,
+            ontheWay: false,
+            orderID : newOrderID,
+            processed : false
+        })
+    
+        db.collection("users").doc(userID).update({
+            orderID : newOrderID
+        }).then(() => {
+    
+            dispatch({
+                type : SEND_ORDER,
+                payload : {
+                    message : "Success"
+                }
+            })
+    
+        })
+
+    }
+
+   
+
+}
 

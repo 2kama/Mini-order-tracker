@@ -6,9 +6,11 @@ import Login from './Auth/Login'
 import Register from './Auth/Register'
 import AdminHome from './Admin/'
 import Redirect from './Redirect'
+import Order from './Order/Orders'
 
 import AddProduct from './AddProducts/AddProduct'
 import Market from './Market/'
+import Cart from './Cart/Cart'
 
 
 const App = () => {
@@ -23,6 +25,8 @@ const App = () => {
                         <Route path="/adminHome" component={AdminHome} />
                         <Route path="/redirect" component={Redirect} />
                         <Route path="/addProduct" component={AddProduct} />
+                        <Route path="/cart" component={Cart} />
+                        <Route path="/orders" component={Order} />
                     </Switch>
                 </div>
             </BrowserRouter>

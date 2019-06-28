@@ -35,7 +35,7 @@ class CartNum extends Component {
                 db.collection("users").doc(user.uid).get().then((sap) => {
                 
     
-                    db.collection("orders").where("orderID", "==", sap.data().orderID).get().then((snap) => {
+                    db.collection("orders").where("orderID", "==", sap.data().orderID).onSnapshot((snap) => {
                         
                            this.setState({
                                cart : snap.size
