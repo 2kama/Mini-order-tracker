@@ -5,7 +5,7 @@ import moment from 'moment'
 
 
 import Header from './../Header'
-//import Package from './Package'
+import Package from './Package'
 
 
 const firebaseAuth = firebase.auth()
@@ -93,11 +93,11 @@ class Orders extends Component {
                                 {packages.length > 0 && (
                                     packages.map(packages => {
                                         return (
-                                            <div className="col-md-12">
+                                            <div className="col-md-12" key={packages.orderID}>
                                                 <div className="row">
                                                     <div className="col-md-12">Order made at {moment(packages.sentOrder).format("YYYY-MM-DD hh:mm:ss")}</div>
                                                     <div className="col-md-12">Order is due {moment(packages.due).format("YYYY-MM-DD hh:mm:ss")}</div>
-                                                    {/* <Package packageID={package.orderID} key={package.orderID} /> */}
+                                                    <Package packageID={packages.orderID} key={packages.orderID} />
                                                 </div>
                                             </div>
                                             

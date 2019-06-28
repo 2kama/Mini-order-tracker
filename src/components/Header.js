@@ -60,6 +60,19 @@ class Header extends Component {
                     
                     </ul>
                     <ul className="navbar-nav my-2 my-lg-0">
+                        {
+                            this.state.user && this.state.type == "customer" && (
+                                <>
+                                <li className="nav-item">
+                                    <a href="/orders" className="nav-link">Orders</a>
+                                </li>
+
+                                <li className="nav-item">
+                                    <a href="/cart" className="nav-link">Cart</a>
+                                </li>
+                                </>
+                            )
+                        }
                         <li className="nav-item">
                             <a className="nav-link" href="javascript:;">{this.state.name} ({this.state.type})</a>
                         </li>

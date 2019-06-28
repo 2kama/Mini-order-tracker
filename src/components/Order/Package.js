@@ -12,10 +12,10 @@ class Package extends Component {
         super(props)
 
         this.state = {
-            orderID : this.props.package,
+            orderID : this.props.packageID,
             error : false,
             errorMsg : '',
-            orders = []
+            orders : []
         }
     }
 
@@ -29,8 +29,8 @@ class Package extends Component {
         this.work = db.collection("orders").where("orderID", "==", this.state.orderID).onSnapshot(sap => {
             const orders = []
             
-                        snap.forEach((docSnapshot) => {
-                          orders.push(docSnapshot.data());
+                        sap.forEach((docSnapshot) => {
+                          orders.push(docSnapshot.data())
                         });
                         this.setState({ orders })
         })
@@ -39,45 +39,38 @@ class Package extends Component {
     }
 
 
+
+    getProductName = productID => {
+        db.collection("products").doc(productID).get().then((doc) => {
+            return doc.data().productName
+        })
+    }
    
-
-
-    updateQty = event => {
-
-        this.setState({quantity : event.target.value})
-
-        if(event.target.value >= 1) {
-            db.collection("orders").doc(this.state.orderItem).update({
-                quantity : event.target.value
-            })
-        }else {
-            this.removeProduct()
-        }
-
-        
-    }
-
-    removeProduct = () => {
-        db.collection("orders").doc(this.state.orderItem).delete()
-    }
-
 
 
     render() {
 
-        const {productName, productPrice, quantity } = this.state
+        const { orders } = this.state
 
         return(
             <Fragment>
-
-
                     <div className="col-md-12">
-                        <div className="row">
-                            
-                        </div>
-                    </div>
-                
 
+                                {orders.length > 0 && (
+                                    orders.map(orders => {
+                                        return (
+                                            
+                                                <div className="col-md-12" key={orders.orderItem}>
+                                                     {this.getProductName(orders.productID)} => {orders.quantity}
+                                                </div>
+                                           
+                                            
+                                        )
+                                        
+                                    })
+                                )}
+                
+                </div>
 
             </Fragment>
         )
